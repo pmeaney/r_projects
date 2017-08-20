@@ -35,22 +35,29 @@ levels(factor(bfrss_rawData_AlaskaData$QuestionID))
 
 #### MAPPING #####
 
-# Let's try this:
-# http://www.computerworld.com/article/3175623/data-analytics/mapping-in-r-just-got-a-whole-lot-easier.html
 
+install.packages(c("ggplot2", "devtools", "dplyr", "stringr")) # data tools
+install.packages(c("maps", "mapdata")) # maping packages
+devtools::install_github("dkahle/ggmap") # most up to date version, ggmap package
 
+library(ggplot2)
+library(ggmap)
+library(maps)
+library(mapdata)
 
+usa <- map_data("usa")
+head(usa)
+ggplot() + geom_polygon(data=usa, aes(x=long, y=lat, group=group)) + coord_fixed(1.3)
+  
 
-
-
-
-
+  
+  
 ########################################
 ########################################
 ##### TO INCLUDE IN NOTES:
 
 
-### THINGS THAT DID NOT WORK:
+### THINGS THAT DID NOT WORK OR THAT AREN'T PERTINENT BUT ARE RELATED/INTERESTING:
 
 
 ### Mapping ###
@@ -69,4 +76,22 @@ library(ggmap)
 par(mfrow = c(2, 1))
 map("state", "ALASKA")
 dev.off()
-###############
+###########################################################################
+
+
+# This could be interesting to mess with:
+# http://www.computerworld.com/article/3175623/data-analytics/mapping-in-r-just-got-a-whole-lot-easier.html
+install.packages("tmap")
+install.packages("tmaptools")
+library("tmap")
+library("tmaptools")
+install.packages("remotes")
+remotes::install_github('walkerke/tigris')
+library("tigris")
+
+us_geo <- states(class="sf")
+###########################################################################
+
+###########################################################################
+
+###########################################################################
