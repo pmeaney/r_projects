@@ -26,3 +26,47 @@ bfrss_rawData_AlaskaData <- filter(bfrss_rawData, bfrss_rawData$Locationabbr == 
 # Now there are 17356 records (1.88% of total)
 nrow(bfrss_rawData_AlaskaData)
 head(bfrss_rawData_AlaskaData, 1)
+
+summary(bfrss_rawData_AlaskaData)
+
+# What are the questions about, and how many are there?
+levels(factor(bfrss_rawData_AlaskaData$QuestionID))
+
+
+#### MAPPING #####
+
+# Let's try this:
+# http://www.computerworld.com/article/3175623/data-analytics/mapping-in-r-just-got-a-whole-lot-easier.html
+
+
+
+
+
+
+
+
+########################################
+########################################
+##### TO INCLUDE IN NOTES:
+
+
+### THINGS THAT DID NOT WORK:
+
+
+### Mapping ###
+# source info: http://bcb.dfci.harvard.edu/~aedin/courses/R/CDC/maps.html
+# --> Only has lower 48 states
+install.packages("mapproj")
+install.packages("ggmap")
+install.packages("DeducerSpatial")
+
+require(maps)
+require(ggmap)
+library(maps)
+library(ggmap)
+
+
+par(mfrow = c(2, 1))
+map("state", "ALASKA")
+dev.off()
+###############
