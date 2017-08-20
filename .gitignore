@@ -1,2 +1,4 @@
 BFRSS_data/*
 !BFRSS_data/*.r
+*
+!*.r
