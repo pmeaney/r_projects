@@ -1,3 +1,4 @@
+.DS_STORE
 BFRSS_data/*
 !BFRSS_data/*.r
 *
