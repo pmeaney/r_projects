@@ -20,8 +20,6 @@
 ##  Manually Installed Package since github was blocked by firewall      ##
 ###########################################################################
 
-## This lets us check Variance Inflation Factors:
-
 
 library("ggplot2")
 library("devtools")
@@ -375,6 +373,7 @@ reg.lm <- lm(AustinData$MedianHouseholdIncome ~ ., data=AustinData)
 sum.reg.lm <- summary(reg.lm)
 step.1<-step(reg.lm,direction="backward",trace=T)
 
+## This lets us check Variance Inflation Factors:
 VIF(reg.lm)
 
 summary(lm(AustinData$MedianHouseholdIncome ~ AustinData$PopulationBelowPovertyLevel + AustinData$Unemployment + AustinData$MedianRent + AustinData$population + AustinData$theft + AustinData$theft_perCapita))
