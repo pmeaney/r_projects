@@ -389,6 +389,10 @@ summary(lm(AustinData$totalCrimes ~ AustinData$PopulationBelowPovertyLevel * Aus
 ####
 ####  These show significant effects of crime on economic indicators
 ####
+# Let's take a sample and use it to make a model
+austinSample <- sample_n(AustinData, 30)
+ View(austinSample)
+
 summary(lm(austinSample$PopulationBelowPovertyLevel ~ austinSample$assault*austinSample$rape*austinSample$theft))
 summary(lm(austinSample$MedianHouseholdIncome  ~ austinSample$assault*austinSample$rape*austinSample$theft ))
 summary(lm(austinSample$MedianRent  ~ austinSample$assault*austinSample$rape*austinSample$theft ))
