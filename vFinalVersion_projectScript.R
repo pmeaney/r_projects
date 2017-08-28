@@ -2,7 +2,6 @@
 ####################
 ####################
 ## Install packages & load libraries:
-# 
 # install.packages("ggplot2")
 # install.packages("devtools")
 # install.packages("data.table")
@@ -19,6 +18,8 @@
 ##  https://github.com/arilamstein/choroplethrZip/archive/v1.5.0.tar.gz  ##
 ##  Manually Installed Package since github was blocked by firewall      ##
 ###########################################################################
+
+## This lets us check Variance Inflation Factors:
 
 
 library("ggplot2")
@@ -81,9 +82,9 @@ library("fmsb")
 
 #####  **  **  **  **  **  **  DOWNLOAD THE DATASET CSV FILE   **  **  **  **  **  **  ** 
 #####  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  
-      ##  Automatically download and load from url via this link:
+##  Automatically download and load from url via this link:
 austin2014_data_raw <- read_csv('https://data.austintexas.gov/resource/hcnj-rei3.csv', na = '')
-  ##  OR download the dataset by visitng the link above, and then loading it from the csv file in a directory:
+##  OR download the dataset by visitng the link above, and then loading it from the csv file in a directory:
 #setwd()
 # austin2014_data_raw <- read_csv('hcnj-rei3.csv', na = '')
 #####  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  
@@ -373,7 +374,6 @@ reg.lm <- lm(AustinData$MedianHouseholdIncome ~ ., data=AustinData)
 sum.reg.lm <- summary(reg.lm)
 step.1<-step(reg.lm,direction="backward",trace=T)
 
-## This lets us check Variance Inflation Factors:
 VIF(reg.lm)
 
 summary(lm(AustinData$MedianHouseholdIncome ~ AustinData$PopulationBelowPovertyLevel + AustinData$Unemployment + AustinData$MedianRent + AustinData$population + AustinData$theft + AustinData$theft_perCapita))
@@ -390,7 +390,7 @@ summary(lm(AustinData$totalCrimes ~ AustinData$PopulationBelowPovertyLevel * Aus
 ####
 # Let's take a sample and use it to make a model
 austinSample <- sample_n(AustinData, 30)
- View(austinSample)
+View(austinSample)
 
 summary(lm(austinSample$PopulationBelowPovertyLevel ~ austinSample$assault*austinSample$rape*austinSample$theft))
 summary(lm(austinSample$MedianHouseholdIncome  ~ austinSample$assault*austinSample$rape*austinSample$theft ))
@@ -696,7 +696,7 @@ AustinTestDataset <- data.frame(MedianHouseholdIncome = AustinTestDataset$Median
                                 robberyPerCapita = AustinTestDataset$robbery_perCapita,
                                 burglaryPerCapita = AustinTestDataset$burglary_perCapita,
                                 theftPerCapita = AustinTestDataset$theft_perCapita
-                                )
+)
 glimpse(AustinTestDataset)
 
 
@@ -713,11 +713,11 @@ graphics.off()
 par(mfrow=c(2,4))
 
 ##################### Income vs assault 
-  ## Training model
+## Training model
 multipleregression_train_assault<-lm(
-    assault_perCapita ~ 
+  assault_perCapita ~ 
     MedianHouseholdIncome * MedianRent * PopulationBelowPovertyLevel, 
-    data=AustinTrainingDataset )
+  data=AustinTrainingDataset )
 summary(multipleregression_train_assault)
 VIF(multipleregression_train_assault)
 
@@ -770,7 +770,7 @@ avgCI_burglary
 plot(avgCI_burglary[,1],type="l",
      ylim=c(0,max(avgCI_burglary[,3]+max(avgCI_burglary[,3])*.1)),
      main="Confidence interval vs actual: Burglary per capita"
-     )
+)
 lines(avgCI_burglary[,1],col="red")
 lines(avgCI_burglary[,2],col="green")
 lines(avgCI_burglary[,3],col="green")
@@ -948,4 +948,3 @@ abline(lm(AustinData$MedianHouseholdIncome~AustinData$theft))
 plot(AustinData$MedianHouseholdIncome~AustinData$rape, main="Rape vs Median Household Income", xlim=c(0,3150))
 cor(AustinData$MedianHouseholdIncome,AustinData$rape)
 abline(lm(AustinData$MedianHouseholdIncome~AustinData$rape))
-
