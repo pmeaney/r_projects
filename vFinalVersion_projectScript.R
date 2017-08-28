@@ -411,16 +411,26 @@ names(checkMedianIncome)[8] <- "MedianIncome" # change name of column 8
 reg.lm <- lm(checkMedianIncome$MedianIncome ~ ., data=checkMedianIncome)
 sum.reg.lm <- summary(reg.lm)
 step.1<-step(reg.lm,direction="backward",trace=T)
-# Result is an error
+# Result is an error b/c we're including all factors -- and that includes MedianIncome itself.  So let's just use the others:
+
+reg.lm <- lm(checkMedianIncome$MedianIncome ~ 
+               checkMedianIncome$assault + 
+               checkMedianIncome$burglary + 
+               checkMedianIncome$homicide + 
+               checkMedianIncome$rape + 
+               checkMedianIncome$robbery +
+               checkMedianIncome$theft, data=checkMedianIncome)
+sum.reg.lm <- summary(reg.lm)
+step.1<-step(reg.lm,direction="backward",trace=T)
+# Note: there is not much difference between AIC value including all factors shown above, versus other combinations
+# Therefore, AIC isn't really telling us much. Can ignore it.
 
 # let's try crime per capita
 checkMedianIncome <- cbind(crimeList_perCapita, AustinData$MedianHouseholdIncome)
 head(checkMedianIncome)
 names(checkMedianIncome)[8] <- "MedianIncome" # change name of column 8
-reg.lm <- lm(checkMedianIncome$MedianIncome ~ ., data=checkMedianIncome)
-sum.reg.lm <- summary(reg.lm)
 
-step.1<-step(reg.lm,direction="backward",trace=T)
+
 plot(AustinData$theft ~ AustinData$MedianHouseholdIncome)
 
 
@@ -948,3 +958,4 @@ abline(lm(AustinData$MedianHouseholdIncome~AustinData$theft))
 plot(AustinData$MedianHouseholdIncome~AustinData$rape, main="Rape vs Median Household Income", xlim=c(0,3150))
 cor(AustinData$MedianHouseholdIncome,AustinData$rape)
 abline(lm(AustinData$MedianHouseholdIncome~AustinData$rape))
+
