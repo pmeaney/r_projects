@@ -1,3 +1,11 @@
+# Note: You can use shift-enter to run a line/highlighted lines
+
+# Note: Highlight commented code and shift-command-c to bulk un-comment-- You'll to need the install the packages & load libaries
+
+# Note: Don't forget-- set your working directory
+# setwd('/your/working/directory/')
+
+# Note: Be sure to download the Crime data set manually-- (it's 40k rows.  R was only willing to import the first 1k rows via its automatic download function)
 
 ####################
 ####################
@@ -18,8 +26,6 @@
 ##  https://github.com/arilamstein/choroplethrZip/archive/v1.5.0.tar.gz  ##
 ##  Manually Installed Package since github was blocked by firewall      ##
 ###########################################################################
-
-## This lets us check Variance Inflation Factors:
 
 
 library("ggplot2")
@@ -85,7 +91,7 @@ library("fmsb")
 ##  Automatically download and load from url via this link:
 austin2014_data_raw <- read_csv('https://data.austintexas.gov/resource/hcnj-rei3.csv', na = '')
 ##  OR download the dataset by visitng the link above, and then loading it from the csv file in a directory:
-#setwd()
+
 # austin2014_data_raw <- read_csv('hcnj-rei3.csv', na = '')
 #####  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  
 #####  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  
@@ -131,12 +137,14 @@ names(austin2014_EconData_selection) <- c("zipcode", "PopulationBelowPovertyLeve
 
 #####  **  **  **  **  **  **  DOWNLOAD THE DATASET CSV FILE   **  **  **  **  **  **  ** 
 #####  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  
+
 ## NOTE: You need to MANUALLY download this entire dataset (40.6k rows) by visiting this link:
 ## https://data.austintexas.gov/dataset/Annual-Crime-2014/7g8v-xxja/about
 ## (This command allows direct download, but is limited to 1000 rows, so we didn't use it: austinCrime2014_data_raw <- read_csv('https://data.austintexas.gov/resource/7g8v-xxja.csv', na = '') )
 
 ## This uses the csv file you downloaded from the above link, so make sure you have it in the right directory:
 austinCrime2014_data_raw <- read.csv('Annual_Crime_2014.csv', na = '')
+
 #####  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  
 #####  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  
 
@@ -503,7 +511,7 @@ multipleregression_robbery<-lm(
   #    *AustinData$population
 )
 summary(multipleregression_robbery)
-qqnorm(multipleregression_robbery)
+#qqnorm(multipleregression_robbery) --> throwing an erro
 
 
 # Review Assault
@@ -527,7 +535,6 @@ multipleregression_assault<-lm(
 )
 summary(multipleregression_assault)
 plot(multipleregression_assault)
-
 
 # Review Rape
 SLR_Rape<-lm(AustinData$rape_perCapita~
@@ -959,3 +966,27 @@ plot(AustinData$MedianHouseholdIncome~AustinData$rape, main="Rape vs Median Hous
 cor(AustinData$MedianHouseholdIncome,AustinData$rape)
 abline(lm(AustinData$MedianHouseholdIncome~AustinData$rape))
 
+
+
+### Let's do a quick choropleth map  (heat map)
+View(AustinData)
+typeof(AustinData) # Currently it's a list.
+austinData_df <- as.data.frame(AustinData) # Take the data as a dataframe
+# Choropleth map function takes two columns with required names: region and value.  Region will be zipcode.  Value is value to be mapped, in this case, crime frequencies
+austinData_df$region <- austinData_df[,1]  # So, first let's create a column called 'region' to host zipcode values
+austinData_df$value <- austinData_df[,9]  # Now, let's create one called 'value', which we use to host the values we select out.  Let's go with Assault, which is column 9
+# Remove all columns except Zipcode and Assault (or whatever column you want to make the "value" associated with each "region" i.e. zipcode)
+View(austinData_df)
+# Now, dump all the other columns: 1 through 22
+austinData_df <- austinData_df[,-c(1:22)]
+View(austinData_df)  # Now we've got our region & value set.  Let's map it.
+
+# These columns need some data type conversion...
+austinData_df$region <- as.character(austinData_df$region) 
+austinData_df$value <- as.numeric(as.character(austinData_df$value))
+
+zip_choropleth(austinData_df,
+               zip_zoom = austinData_df$region,
+               title      = "Assault frequency in Austin, TX 2014",
+               legend     = "Assault Frequency",
+               num_colors = 1) + coord_map()
