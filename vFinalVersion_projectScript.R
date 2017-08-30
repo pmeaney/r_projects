@@ -888,8 +888,8 @@ avgCI_assault
 
 
 
-##################################################################
-######################################## PLOTS
+########################################
+########################################  Plots
 ########################################
 
 # Income vs total crime -- Pattern, -.43 correlation coefficient
@@ -931,7 +931,7 @@ cor(AustinData$MedianHouseholdIncome,AustinData$rape)
 abline(lm(AustinData$MedianHouseholdIncome~AustinData$rape))
 
 ########################################
-######################################## Scaled Plots
+########################################  Scaled Plots
 ########################################
 
 graphics.off()
@@ -967,26 +967,51 @@ cor(AustinData$MedianHouseholdIncome,AustinData$rape)
 abline(lm(AustinData$MedianHouseholdIncome~AustinData$rape))
 
 
-
+dev.off()
 ### Let's do a quick choropleth map  (heat map)
 View(AustinData)
 typeof(AustinData) # Currently it's a list.
-austinData_df <- as.data.frame(AustinData) # Take the data as a dataframe
+
+chorplethData_df_assault <- as.data.frame(AustinData) # Take the data as a dataframe
+View(chorplethData_df_assault)
 # Choropleth map function takes two columns with required names: region and value.  Region will be zipcode.  Value is value to be mapped, in this case, crime frequencies
-austinData_df$region <- austinData_df[,1]  # So, first let's create a column called 'region' to host zipcode values
-austinData_df$value <- austinData_df[,9]  # Now, let's create one called 'value', which we use to host the values we select out.  Let's go with Assault, which is column 9
+chorplethData_df_assault$region <- austinData_df[,1]  # So, first let's create a column called 'region' to host zipcode values
+chorplethData_df_assault$value <- austinData_df[,9]  # Now, let's create one called 'value', which we use to host the values we select out.  Let's go with Assault, which is column 9
 # Remove all columns except Zipcode and Assault (or whatever column you want to make the "value" associated with each "region" i.e. zipcode)
-View(austinData_df)
+View(chorplethData_df_assault)
 # Now, dump all the other columns: 1 through 22
-austinData_df <- austinData_df[,-c(1:22)]
-View(austinData_df)  # Now we've got our region & value set.  Let's map it.
+chorplethData_df_assault <- chorplethData_df_assault[,-c(1:22)]
+View(chorplethData_df_assault)  # Now we've got our region & value set.  Let's map it.
 
 # These columns need some data type conversion...
-austinData_df$region <- as.character(austinData_df$region) 
-austinData_df$value <- as.numeric(as.character(austinData_df$value))
+chorplethData_df_assault$region <- as.character(chorplethData_df_assault$region) 
+chorplethData_df_assault$value <- as.numeric(as.character(chorplethData_df_assault$value))
 
-zip_choropleth(austinData_df,
-               zip_zoom = austinData_df$region,
+zip_choropleth(chorplethData_df_assault,
+               zip_zoom = chorplethData_df_assault$region,
                title      = "Assault frequency in Austin, TX 2014",
                legend     = "Assault Frequency",
-               num_colors = 1) + coord_map()
+               num_colors = 1,
+               palette=1) + coord_map()
+
+
+##############################
+## Let's do some others:
+chorpleth_df <- as.data.frame(AustinData)
+#head(chorpleth_df, 1)
+#assault burglary homicide rape robbery theft   total crimes 
+#   9       10      11      12    13      14        21
+
+chorpleth_df$region <- chorpleth_df[,1] 
+chorpleth_df$value <- chorpleth_df[,10] # Burglary 
+chorpleth_df <- chorpleth_df[,-c(1:22)]
+chorpleth_df$region <- as.character(chorpleth_df$region) 
+chorpleth_df$value <- as.numeric(as.character(chorpleth_df$value))
+
+zip_choropleth(chorpleth_df,
+               zip_zoom = chorpleth_df$region,
+               title      = "Burglary frequency in Austin, TX 2014",
+               legend     = "Burglary Frequency",
+               num_colors = 1,
+               palette=2) + coord_map()
+
