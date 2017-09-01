@@ -4,7 +4,7 @@
 
 # Note: Don't forget-- set your working directory
 # setwd('/your/working/directory/')
-
+setwd('/Users/delfuego/Documents/Education-CopiedFromExtDrive/STATS QMST 5334/Project/R docs for project/')
 # Note: Be sure to download the Crime data set manually-- (it's 40k rows.  R was only willing to import the first 1k rows via its automatic download function)
 
 ####################
@@ -967,16 +967,20 @@ cor(AustinData$MedianHouseholdIncome,AustinData$rape)
 abline(lm(AustinData$MedianHouseholdIncome~AustinData$rape))
 
 
-dev.off()
+############################################################
+###         CHOROPLETH MAP
+###
 ### Let's do a quick choropleth map  (heat map)
+
+dev.off() # Clear the plot
 View(AustinData)
 typeof(AustinData) # Currently it's a list.
 
 chorplethData_df_assault <- as.data.frame(AustinData) # Take the data as a dataframe
 View(chorplethData_df_assault)
 # Choropleth map function takes two columns with required names: region and value.  Region will be zipcode.  Value is value to be mapped, in this case, crime frequencies
-chorplethData_df_assault$region <- austinData_df[,1]  # So, first let's create a column called 'region' to host zipcode values
-chorplethData_df_assault$value <- austinData_df[,9]  # Now, let's create one called 'value', which we use to host the values we select out.  Let's go with Assault, which is column 9
+chorplethData_df_assault$region <- chorplethData_df_assault[,1]  # So, first let's create a column called 'region' to host zipcode values
+chorplethData_df_assault$value <- chorplethData_df_assault[,9]  # Now, let's create one called 'value', which we use to host the values we select out.  Let's go with Assault, which is column 9
 # Remove all columns except Zipcode and Assault (or whatever column you want to make the "value" associated with each "region" i.e. zipcode)
 View(chorplethData_df_assault)
 # Now, dump all the other columns: 1 through 22
@@ -991,27 +995,46 @@ zip_choropleth(chorplethData_df_assault,
                zip_zoom = chorplethData_df_assault$region,
                title      = "Assault frequency in Austin, TX 2014",
                legend     = "Assault Frequency",
-               num_colors = 1,
-               palette=1) + coord_map()
+               num_colors = 1) + coord_map()
 
 
-##############################
-## Let's do some others:
-chorpleth_df <- as.data.frame(AustinData)
-#head(chorpleth_df, 1)
-#assault burglary homicide rape robbery theft   total crimes 
-#   9       10      11      12    13      14        21
 
-chorpleth_df$region <- chorpleth_df[,1] 
-chorpleth_df$value <- chorpleth_df[,10] # Burglary 
-chorpleth_df <- chorpleth_df[,-c(1:22)]
-chorpleth_df$region <- as.character(chorpleth_df$region) 
-chorpleth_df$value <- as.numeric(as.character(chorpleth_df$value))
 
-zip_choropleth(chorpleth_df,
-               zip_zoom = chorpleth_df$region,
-               title      = "Burglary frequency in Austin, TX 2014",
-               legend     = "Burglary Frequency",
-               num_colors = 1,
-               palette=2) + coord_map()
+
+############################################################
+## Was going to try to use ggplot2 to provide a a better color palette to the choropleth.
+# (as shown here: https://webcache.googleusercontent.com/search?q=cache:Mh_De_4jdzYJ:https://www.arilamstein.com/open-source/choroplethrzip/creating-zip-code-choropleths-choroplethrzip/+&cd=1&hl=en&ct=clnk&gl=us )
+# Have not been able to get this to work though.  
+# Sadly, at the moment, I need to move on to work on other things.
+# However I am more than happy to put time into crafting visualizations from data.
+#
+#   head(chorpleth_df, 1)
+#   assault burglary homicide rape robbery  theft  total crimes 
+#     9       10      11      12    13      14        21
+# 
+# 
+# choropleth_df <- as.data.frame(AustinData)
+# 
+# choropleth_df$region <- choropleth_df[,1] 
+# choropleth_df$value <- choropleth_df[,10] # Burglary 
+# choropleth_df <- choropleth_df[,-c(1:22)]
+# choropleth_df$region <- as.character(choropleth_df$region) 
+# choropleth_df$value <- as.numeric(as.character(choropleth_df$value))
+# 
+# choropleth_df = ZipChoropleth$new(choropleth_df)
+# choropleth_df$title = "Burglary frequency in Austin, TX 2014"
+# choropleth_df$ggplot_scale = scale_fill_brewer(name="Burglaries", palette=2, drop=FALSE)
+# choropleth_df$set_zoom_zip(zip_zoom = choropleth_df$region, state_zoom=NULL, county_zoom=NULL, msa_zoom=NULL) # Note: Other available zoom levels include state_zoom, county_zoom, msa_zoom, zip_zoom
+
+# ##### Problem: This Render function call freezes up, making R freeze up 
+# & difficult to terminate process(have had to shut down R).
+#
+# choropleth_df$render()  
+# 
+# zip_choropleth(choropleth_df,
+#                zip_zoom = choropleth_df$region,
+#                title      = "Burglary frequency in Austin, TX 2014",
+#                legend     = "Burglary Frequency",
+#                num_colors = 1,
+#                palette=2) + coord_map()
 
